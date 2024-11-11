@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="pro.html">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #b9b8b8;
+            color: #4652ff;
+        }
+
+        h1 {
+            color: #111113;
+        }
+
+        h2 {
+            color: #ffffff;
+        }
+
+        header {
+            background-color: #898b8a;
+            padding: 10px;
+            color: rgb(12, 11, 11);
+            text-align: center;
+            position: relative;
+        }
+
+        #dashboard {
+            display: none;
+            background-image: url('fundo.webp');
+            /* A imagem de fundo */
+            background-size: cover;
+            /* Garante que a imagem cubra a tela inteira */
+            background-position: center;
+            /* Garante que a imagem seja centralizada */
+            height: 100vh;
+            /* Altura total da janela */
+            color: rgb(255, 255, 255);
+            /* Cor do texto */
+            display: flex;
+            justify-content: center;
+            /* Centraliza o conteúdo horizontalmente */
+            align-items: center;
+            /* Centraliza o conteúdo verticalmente */
+            position: relative;
+            /* Define um contexto de posicionamento */
+        }
+
+        .content-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Fundo semi-transparente */
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 100%;
+            /* Controla o tamanho máximo da caixa */
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+            /* Animação de fade-in */
+        }
+
+        .menu {
+            margin: 10px 0;
+        }
+
+        .menu a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            background-color: #7e7e7e;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+            background-color: #ffffff;
+            color: black;
+        }
+
+        .logout-button {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            background-color: #2e32ff;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .img{
+            display: flex;
+            justify-content: space-around;
+            justify-content: space-between;
+            margin-top: 15px;
+            
+        }
+
+        .login-container,
+        .product-form,
+        .stock-container,
+        .sale-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ccc;
+            color: #000000;
+            border-radius: 5px;
+        }
+
+        .reset-button {
+            position: absolute;
+            right: 100px;
+            top: 10px;
+            background-color: hsl(0, 82%, 46%);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-button:hover {
+            background-color: #ffffff;
+        }
+
+        .reset-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stock-container {
+            color: #050505;
+        }
+
+
+        input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            input {
+                padding: 8px;
+            }
+
+            button {
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            h1 {
+                font-size: 1.75em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Fundo semi-transparente */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark-mode header {
+            background-color: #444;
+            color: white;
+        }
+
+        body.dark-mode .menu a {
+            background-color: #797979;
+            color: #fff;
+        }
+
+        body.dark-mode .menu a:hover {
+            background-color: #666;
+            color: #020202;
+        }
+
+        body.dark-mode .product-form,
+        body.dark-mode .stock-container,
+        body.dark-mode .sale-container {
+            background-color: #444;
+            border: 1px solid #666;
+        }
+
+        body.dark-mode table,
+        body.dark-mode th,
+        body.dark-mode td {
+            border: 1px solid #666;
+        }
+
+        body.dark-mode footer {
+            color: #ddd;
+        }
+
+        body.dark-mode .theme-toggle {
+            color: #fff;
+        }
+
+        /* Fundo semi-transparente */
+    </style>
+</head>
+
+<body>
+    <!-- Área de Login -->
+    <div id="login-content" style="display: block;">
+        <h2>Login</h2>
+        <div class="login-container">
+            <input type="text" id="username" placeholder="Usuário" required>
+            <input type="password" id="password" placeholder="Senha" required>
+            <button onclick="login()">Entrar</button>
+            <p>Ainda não tem uma conta? <a href="#" onclick="showSignup()">Cadastre-se</a></p>
+        </div>
+    </div>
+
+    <!-- Área de Cadastro (invisível por padrão) -->
+    <div id="signup-content" style="display: none;">
+        <h2>Cadastro</h2>
+        <div class="login-container">
+            <input type="text" id="new-username" placeholder="Novo Usuário" required>
+            <input type="password" id="new-password" placeholder="Nova Senha" required>
+            <button onclick="signup()">Cadastrar</button>
+            <p>Já tem uma conta? <a href="#" onclick="showLogin()">Faça login</a></p>
+        </div>
+    </div>
+
+    <!-- Dashboard / Menu de navegação (invisível por padrão) -->
+    <div id="header" style="display: none;">
+        <header>
+            <h1>Gerenciamento de Armanzem</h1>
+            <div class="menu">
+                <a href="#" onclick="showDashboard()">Home</a>
+                <a href="#" onclick="showStock()">Estoque</a>
+
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Escuro/Claro</button>
+            <button class="logout-button" onclick="logout()">Logout</button>
+        </header>
+    </div>
+
+    <!-- Página Inicial / Dashboard (invisível por padrão) -->
+    <div id="dashboard" style="display: none;">
+        <div class="content-overlay">
+            <h2>Bem-vindo à página inicial do Armanzem!</h2>
+            <p class="description">O Armanzem é uma plataforma simples e eficiente para gerenciar estoque, entradas e
+                saídas de produtos, além de permitir a venda diretamente da interface.</p>
+        </div>
+    </div>
+
+    <!-- Página de Estoque (invisível por padrão) -->
+    <div id="stock-info" style="display: none;">
+        <h1>Estoque</h1>
+        <div class="stock-container" id="stock-container">
+            <h2>Produtos no Estoque</h2>
+            <table id="product-table">
+                <thead>
+                    <tr>
+                        <th>Nome do Produto</th>
+                        <th>Quantidade</th>
+                        <th>Data de Entrada</th>
+                        <th>Data de Validade</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list"></tbody>
+
+            </table>
+            <div class="img">
+                <li>Óleo</li>
+                <img src="fula.jpg" alt="" width="200px">
+                <li>Açucra</li>
+                <img src="açucra.jpg" alt="" width="200px">
+                <li>Arroz Biju</li>
+                <img src="biju.jpg" alt="" width="200px">
+                <li>Ovo</li>
+                <img src="ovo.jpg" alt="" width="200px">
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Página de Adicionar Produto (invisível por padrão) -->
+    <div id="add-product-info" style="display: none;">
+        <h2>Adicionar Novo Produto</h2>
+        <div class="product-form">
+            <input type="text" id="product-name" placeholder="Nome do Produto" required>
+            <input type="number" id="product-quantity" placeholder="Quantidade" required>
+            <input type="date" id="product-entry-date" placeholder="Data de Entrada" required>
+            <input type="date" id="product-expiry-date" placeholder="Data de Validade" required>
+            <button onclick="addProduct()">Adicionar Produto</button>
+        </div>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let loggedIn = JSON.parse(localStorage.getItem('loggedIn')) || false;
+
+        if (loggedIn) {
+            showDashboard();
+        }
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                loggedIn = true;
+                localStorage.setItem('loggedIn', 'true');
+                showDashboard();
+            } else {
+                alert('Usuário ou senha inválidos.');
+            }
+        }
+
+        function showSignup() {
+            document.getElementById('signup-content').style.display = 'block';
+            document.getElementById('login-content').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('signup-content').style.display = 'none';
+            document.getElementById('login-content').style.display = 'block';
+        }
+
+        function signup() {
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+
+            const userExists = users.some(user => user.username === username);
+            if (userExists) {
+                alert('Usuário já existe.');
+            } else {
+                users.push({ username, password });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Cadastro realizado com sucesso!');
+                showLogin();
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('header').style.display = 'block';
+            document.getElementById('login-content').style.display = 'none';
+            document.getElementById('signup-content').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'flex';
+            document.getElementById('stock-info').style.display = 'none';
+            document.getElementById('add-product-info').style.display = 'none';
+        }
+
+        function showStock() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('stock-info').style.display = 'block';
+            document.getElementById('add-product-info').style.display = 'none';
+            displayProducts();
+        }
+
+        function showAddProduct() {
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('stock-info').style.display = 'none';
+            document.getElementById('add-product-info').style.display = 'block';
+        }
+
+        function addProduct() {
+            const productName = document.getElementById('product-name').value;
+            const productQuantity = parseInt(document.getElementById('product-quantity').value);
+            const productEntryDate = document.getElementById('product-entry-date').value;
+            const productExpiryDate = document.getElementById('product-expiry-date').value;
+
+            if (productName && productQuantity && productEntryDate && productExpiryDate) {
+                const newProduct = {
+                    name: productName,
+                    quantity: productQuantity,
+                    entryDate: productEntryDate,
+                    expiryDate: productExpiryDate
+                };
+
+                products.push(newProduct);
+                localStorage.setItem('products', JSON.stringify(products));
+                alert('Produto adicionado com sucesso!');
+                showStock();
+            } else {
+                alert('Por favor, preencha todos os campos.');
+            }
+        }
+
+        function displayProducts() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.entryDate}</td>
+                    <td>${product.expiryDate}</td>
+                `;
+                productList.appendChild(row);
+            });
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+            if (currentTheme === 'dark') {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function logout() {
+            loggedIn = false;
+            localStorage.setItem('loggedIn', 'false');
+            document.getElementById('header').style.display = 'none';
+            document.getElementById('login-content').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>

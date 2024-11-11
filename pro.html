@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="cobaia.html">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #b9b8b8;
+            color: #4652ff;
+        }
+
+        h1 {
+            color: #000000;
+        }
+        h2 {
+            color: #000000;
+        }
+
+        header {
+            background-color: #c0c0c0;
+            padding: 10px;
+            color: rgb(12, 11, 11);
+            text-align: center;
+            position: relative;
+        }
+
+        #dashboard {
+            display: none;
+            background-image: url('fundo.webp');
+            /* A imagem de fundo */
+            background-size: cover;
+            /* Garante que a imagem cubra a tela inteira */
+            background-position: center;
+            /* Garante que a imagem seja centralizada */
+            height: 100vh;
+            /* Altura total da janela */
+            color: rgb(255, 255, 255);
+            /* Cor do texto */
+            display: flex;
+            justify-content: center;
+            /* Centraliza o conteúdo horizontalmente */
+            align-items: center;
+            /* Centraliza o conteúdo verticalmente */
+            position: relative;
+            /* Define um contexto de posicionamento */
+        }
+
+        .content-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Fundo semi-transparente */
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 100%;
+            /* Controla o tamanho máximo da caixa */
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+            /* Animação de fade-in */
+        }
+
+        .menu {
+            margin: 10px 0;
+        }
+
+        .menu a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            background-color: #7e7e7e;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+            background-color: #ffffff;
+            color: black;
+        }
+
+        .logout-button {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            background-color: #2e32ff;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-container,
+        .product-form,
+        .stock-container,
+        .sale-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border: 1px solid #ccc;
+            color: #000000;
+            border-radius: 5px;
+        }
+
+        .reset-button {
+            position: absolute;
+            right: 100px;
+            top: 10px;
+            background-color: hsl(0, 82%, 46%);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-button:hover {
+            background-color: #ffffff;
+        }
+
+        .reset-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stock-container{
+            color: #050505;
+        }
+
+
+        input {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ffffff;
+            color: black;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            input {
+                padding: 8px;
+            }
+
+            button {
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 900px) {
+            h1 {
+                font-size: 1.75em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        /* Fundo semi-transparente */
+        body.dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        body.dark-mode header {
+            background-color: #444;
+            color: white;
+        }
+
+        body.dark-mode .menu a {
+            background-color: #797979;
+            color: #fff;
+        }
+
+        body.dark-mode .menu a:hover {
+            background-color: #666;
+            color: #020202;
+        }
+
+        body.dark-mode .product-form,
+        body.dark-mode .stock-container,
+        body.dark-mode .sale-container {
+            background-color: #444;
+            border: 1px solid #666;
+        }
+
+        body.dark-mode table,
+        body.dark-mode th,
+        body.dark-mode td {
+            border: 1px solid #666;
+        }
+
+        body.dark-mode footer {
+            color: #ddd;
+        }
+
+        body.dark-mode .theme-toggle {
+            color: #f0d800;
+        }
+
+        /* Fundo semi-transparente */
+    </style>
+</head>
+
+<body>
+    <div id="header" style="display: none;">
+        <header>
+            <h1>Gerenciamento de Armanzem</h1>
+            <div class="menu">
+                <a href="#" onclick="showDashboard()">Home</a>
+                <a href="#" onclick="showStock()">Estoque</a>
+                <a href="#" onclick="showEntry()">Entrada de Produto</a>
+                <a href="#" onclick="showExit()">Saída de Produto</a>
+                <a href="#" onclick="showSale()">Vender</a>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Modo Escuro/Claro</button>
+
+            <button class="logout-button" onclick="logout()">Logout</button>
+            <button class="reset-button" onclick="resetStock()">Reset</button>
+        </header>
+
+    </div>
+
+    <div id="main-content">
+        <h2>Login</h2>
+        <div class="login-container">
+            <input type="text" id="username" placeholder="Usuário">
+            <input type="password" id="password" placeholder="Senha">
+            <button onclick="login()">Entrar</button>
+            <p>Ainda não tem uma conta? <a href="#" onclick="showSignup()">Cadastre-se</a></p>
+        </div>
+    </div>
+
+    
+    <div id="register-container" style="display: none;">
+        <h2>Cadastro</h2>
+        <div class="login-container">
+            <input type="text" id="new-username" placeholder="Usuário" required>
+            <input type="password" id="new-password" placeholder="Senha" required>
+            <input type="email" id="email" placeholder="E-mail" required>
+            <button  onclick="register()">Registrar</button>
+            <p>Já tem uma conta? <a href="#" onclick="showLogin()">Faça login</a></p>
+      
+    </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="content-overlay">
+            <h3>Bem-vindo à página inicial do Armanzem!</h3>
+            <p class="description">O Armanzem é uma plataforma simples e eficiente para gerenciar estoque, entradas e
+                saídas de produtos, além de permitir a venda diretamente da interface.</p>
+        </div>
+    </div>
+
+
+
+    <div id="stock-info" style="display: none;">
+        <h1>Estoque</h1>
+        <div class="product-form">
+            <h2>Adicionar Produto</h2>
+            <input type="text" id="product-name" placeholder="Nome do Produto">
+            <input type="number" id="product-quantity" placeholder="Quantidade">
+            <input type="date" id="entry-date" placeholder="Data de Entrada">
+            <input type="date" id="expiry-date" placeholder="Data de Validade">
+            <button onclick="addProduct()">Adicionar</button>
+        </div>
+        <div class="stock-container" id="stock-container">
+            <h2>Produtos no Estoque</h2>
+            <table id="product-table">
+                <thead>
+                    <tr>
+                        <th>Nome do Produto</th>
+                        <th>Quantidade</th>
+                        <th>Data de Entrada</th>
+                        <th>Data de Validade</th>
+                    </tr>
+                </thead>
+                <tbody id="product-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- No div de entrada (entry-info) -->
+    <div id="entry-info" style="display: none;">
+        <h2>Entrada de Produtos</h2>
+        <button onclick="resetEntryChart()">Resetar Gráfico de Entrada</button>
+        <canvas id="entryChart" width="400" height="200"></canvas>
+    </div>
+
+    <!-- No div de saída (exit-info) -->
+    <div id="exit-info" style="display: none;">
+        <h2>Saída de Produtos</h2>
+        <button onclick="resetExitChart()">Resetar Gráfico de Saída</button>
+        <canvas id="exitChart" width="400" height="200"></canvas>
+    </div>
+
+    <div id="sale-info" style="display: none;">
+        <h2>Vender Produto</h2>
+        <div class="sale-container">
+            <select id="sale-product-select"></select>
+            <input type="number" id="sale-quantity" placeholder="Quantidade a ser vendida">
+            <input type="number" id="sale-price" placeholder="Preço Unitário" step="0.01">
+            <p id="total-price">Preço Total:  0,00 $</p>
+            <button onclick="sellProduct()">Vender</button>
+        </div>
+    </div>
+    
+
+
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('products')) || [];
+        let exits = JSON.parse(localStorage.getItem('exits')) || [];
+        let entries = JSON.parse(localStorage.getItem('entries')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let loggedIn = localStorage.getItem('loggedIn') === 'true';
+
+        window.onload = function () {
+            if (loggedIn) {
+                document.getElementById('header').style.display = 'block';
+                document.getElementById('main-content').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                displayProducts();
+                populateSaleProducts();
+                updateEntryChart();  // Atualizar gráfico de entradas
+                updateExitChart();   // Atualizar gráfico de saídas
+            }
+        };
+        function resetStock() {
+            // Exibir um prompt para selecionar um produto a ser eliminado
+            const resetContainer = document.createElement('div');
+            resetContainer.style.padding = '20px';
+            resetContainer.style.background = '#fff';
+            resetContainer.style.borderRadius = '5px';
+            resetContainer.style.textAlign = 'center';
+
+            const resetTitle = document.createElement('h3');
+            resetTitle.innerText = 'Selecionar Produto para Eliminar do Estoque';
+            resetContainer.appendChild(resetTitle);
+
+            // Criar um dropdown de produtos
+            const selectProduct = document.createElement('select');
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.name;
+                option.innerText = product.name;
+                selectProduct.appendChild(option);
+            });
+            resetContainer.appendChild(selectProduct);
+
+            // Criar botão para confirmar a exclusão
+            const resetButton = document.createElement('button');
+            resetButton.innerText = 'Excluir Produto';
+            resetButton.style.marginTop = '10px';
+            resetButton.onclick = function () {
+                const selectedProduct = selectProduct.value;
+                if (selectedProduct) {
+                    // Remover o produto selecionado do estoque
+                    products = products.filter(product => product.name !== selectedProduct);
+                    localStorage.setItem('products', JSON.stringify(products)); // Salvar no localStorage
+                    alert('Produto excluído com sucesso!');
+                    displayProducts(); // Atualizar a lista de produtos na tela
+                    resetContainer.remove(); // Fechar o formulário de exclusão
+                } else {
+                    alert('Por favor, selecione um produto para excluir.');
+                }
+            };
+            resetContainer.appendChild(resetButton);
+
+            // Adicionar o formulário à tela
+            document.body.appendChild(resetContainer);
+        }
+
+        function register() {
+        const username = document.getElementById('new-username').value;
+        const password = document.getElementById('new-password').value;
+        const email = document.getElementById('email').value;
+
+        if (!username || !password || !email) {
+            alert('Por favor, preencha todos os campos.');
+            return;
+        }
+
+        if (users.some(user => user.username === username)) {
+            alert('Usuário já existe. Por favor, escolha outro nome de usuário.');
+            return;
+        }
+
+        // Adicionar o novo usuário à lista
+        users.push({ username, password, email });
+        localStorage.setItem('users', JSON.stringify(users));
+
+        alert('Cadastro realizado com sucesso!');
+        
+        // Após o registro, redirecionar para o formulário de login
+        showLogin();
+    }
+
+
+        function login() {
+            alert("Login realizado com sucesso!");
+            localStorage.setItem('loggedIn', 'true');
+            document.getElementById('header').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            displayProducts();
+            populateSaleProducts();
+            updateEntryChart();
+            updateExitChart();
+        }
+
+
+    function showSignup() {
+        document.getElementById('main-content').style.display = 'none';
+        document.getElementById('register-container').style.display = 'block';
+    }
+
+    function showLogin() {
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('register-container').style.display = 'none';
+    }
+
+
+
+    function signup() {
+        const username = document.getElementById('new-username').value;
+        const password = document.getElementById('new-password').value;
+        const email = document.getElementById('email').value;
+
+        if (users.some(user => user.username === username)) {
+            alert('Usuário já existe.');
+            return;
+        }
+
+        users.push({ username, password, email });
+        localStorage.setItem('users', JSON.stringify(users));
+        alert('Cadastro realizado com sucesso!');
+        showLogin();
+    }
+
+        function logout() {
+        localStorage.removeItem('loggedIn');
+        document.getElementById('header').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('dashboard').style.display = 'none';
+        alert("Você foi desconectado!");
+    }
+
+
+        function addProduct() {
+            const productName = document.getElementById('product-name').value;
+            const productQuantity = parseInt(document.getElementById('product-quantity').value);
+            const entryDate = document.getElementById('entry-date').value;
+            const expiryDate = document.getElementById('expiry-date').value;
+
+            if (productName && !isNaN(productQuantity) && entryDate && expiryDate) {
+                products.push({ name: productName, quantity: productQuantity, entryDate, expiryDate });
+                entries.push({ name: productName, quantity: productQuantity });  // Armazenar entrada
+                localStorage.setItem('products', JSON.stringify(products));
+                localStorage.setItem('entries', JSON.stringify(entries));
+                displayProducts();
+                clearProductForm();
+                populateSaleProducts();
+                updateEntryChart();
+                updateExitChart();  // Atualizar gráficos após adição
+            } else {
+                alert("Por favor, preencha todos os campos corretamente.");
+            }
+        }
+
+        window.onload = function () {
+            const theme = localStorage.getItem('theme');
+
+            // Aplica o tema armazenado, se houver
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+
+            if (loggedIn) {
+                document.getElementById('header').style.display = 'block';
+                document.getElementById('main-content').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                displayProducts();
+                populateSaleProducts();
+                updateEntryChart();  // Atualizar gráfico de entradas
+                updateExitChart();   // Atualizar gráfico de saídas
+            }
+        }
+
+
+        function toggleTheme() {
+            const body = document.body;
+            const isDarkMode = body.classList.contains('dark-mode');
+
+            // Alterna entre modo claro e escuro
+            if (isDarkMode) {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light'); // Salva a preferência "light"
+            } else {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark'); // Salva a preferência "dark"
+            }
+        }
+
+
+        function clearProductForm() {
+            document.getElementById('product-name').value = '';
+            document.getElementById('product-quantity').value = '';
+            document.getElementById('entry-date').value = '';
+            document.getElementById('expiry-date').value = '';
+        }
+
+        function displayProducts() {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const row = `<tr>
+                    <td>${product.name}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.entryDate}</td>
+                    <td>${product.expiryDate}</td>
+                </tr>`;
+                productList.innerHTML += row;
+            });
+        }
+
+        function updateEntryChart() {
+            const ctx = document.getElementById('entryChart').getContext('2d');
+            const productNames = entries.map(entry => entry.name);
+            const productQuantities = entries.map(entry => entry.quantity);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: productNames, // Nomes dos produtos
+                    datasets: [{
+                        label: 'Quantidade de Produtos Entrados',
+                        data: productQuantities, // Quantidades dos produtos
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateExitChart() {
+            const ctx = document.getElementById('exitChart').getContext('2d');
+            const productNames = exits.map(exit => exit.name);
+            const productQuantities = exits.map(exit => exit.quantity);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: productNames, // Nomes dos produtos
+                    datasets: [{
+                        label: 'Quantidade de Produtos Vendidos',
+                        data: productQuantities, // Quantidades dos produtos
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function showStock() {
+            hideAllSections();
+            document.getElementById('stock-info').style.display = 'block';
+        }
+
+        function showEntry() {
+            hideAllSections();
+            document.getElementById('entry-info').style.display = 'block';
+        }
+
+        function showExit() {
+            hideAllSections();
+            document.getElementById('exit-info').style.display = 'block';
+        }
+
+        function showSale() {
+            hideAllSections();
+            document.getElementById('sale-info').style.display = 'block';
+        }
+
+        function showDashboard() {
+            hideAllSections();
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        function hideAllSections() {
+            document.getElementById('stock-info').style.display = 'none';
+            document.getElementById('entry-info').style.display = 'none';
+            document.getElementById('exit-info').style.display = 'none';
+            document.getElementById('sale-info').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function populateSaleProducts() {
+            const saleProductSelect = document.getElementById('sale-product-select');
+            saleProductSelect.innerHTML = '';
+            products.forEach(product => {
+                const option = `<option value="${product.name}">${product.name}</option>`;
+                saleProductSelect.innerHTML += option;
+            });
+        }
+
+
+        function updateTotalPrice() {
+    const quantity = parseInt(document.getElementById('sale-quantity').value);
+    const price = parseFloat(document.getElementById('sale-price').value);
+    const totalPriceElement = document.getElementById('total-price');
+
+    if (!isNaN(quantity) && !isNaN(price)) {
+        const total = quantity * price;
+        totalPriceElement.innerText = `Preço Total: $ ${total.toFixed(2)}`;
+    } else {
+        totalPriceElement.innerText = `Preço Total: 0,00 $ `;
+    }
+}
+
+document.getElementById('sale-quantity').addEventListener('input', updateTotalPrice);
+document.getElementById('sale-price').addEventListener('input', updateTotalPrice);
+
+function sellProduct() {
+    const selectedProductName = document.getElementById('sale-product-select').value;
+    const saleQuantity = parseInt(document.getElementById('sale-quantity').value);
+    const salePrice = parseFloat(document.getElementById('sale-price').value);
+    const productIndex = products.findIndex(p => p.name === selectedProductName);
+
+    if (productIndex !== -1 && !isNaN(saleQuantity) && saleQuantity > 0 && !isNaN(salePrice) && salePrice > 0) {
+        if (products[productIndex].quantity >= saleQuantity) {
+            // Decrementar a quantidade do produto no estoque
+            products[productIndex].quantity -= saleQuantity;
+
+            // Adicionar a saída de produto (venda)
+            exits.push({
+                name: selectedProductName,
+                quantity: saleQuantity,
+                price: salePrice,
+                total: saleQuantity * salePrice, // Preço total da venda
+                date: new Date().toISOString()
+            });
+
+            localStorage.setItem('products', JSON.stringify(products));
+            localStorage.setItem('exits', JSON.stringify(exits));
+
+            displayProducts();  // Atualizar lista de produtos
+            clearSaleForm();
+            updateEntryChart();
+            updateExitChart();  // Atualizar gráficos após venda
+
+            alert(`Produto vendido com sucesso! Total: $ ${(saleQuantity * salePrice).toFixed(2)}`);
+        } else {
+            alert("Quantidade insuficiente em estoque.");
+        }
+    } else {
+        alert("Por favor, selecione um produto e insira uma quantidade e preço válidos.");
+    }
+}
+
+function clearSaleForm() {
+    document.getElementById('sale-quantity').value = '';
+    document.getElementById('sale-price').value = '';
+    document.getElementById('total-price').innerText = 'Preço Total:  0,00 $';
+}
+
+    </script>
+    <footer>
+        <p>&copy; 2024 Armanzem</p>
+    </footer>
+</body>
+
+</html>
